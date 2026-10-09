@@ -1,0 +1,13 @@
+services:
+  codepilot:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      WORKSPACE_DIR: /workspace
+      PORT: "8000"
+    volumes:
+      - ./workspace:/workspace
+    ports:
+      - "127.0.0.1:8000:8000"
