@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodePilot — AI Coding Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="logo">⌘</span><div><b>CodePilot</b><small>AI coding workspace</small></div></div>
+    <div class="side-title">WORKSPACE <button id="refreshTree" title="Обновить">↻</button></div>
+    <div id="tree" class="tree"></div>
+    <div class="side-bottom"><span class="dot"></span> Локальная рабочая папка</div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div><span class="crumb">workspace</span><span class="slash">/</span><span id="currentPath">Выбери файл</span></div>
+      <div class="top-actions"><button id="modelSettings">⚙ Модель / API</button><button id="newFile">＋ Файл</button><button id="saveFile" class="primary">Сохранить</button></div>
+    </header>
+    <section class="editor-wrap">
+      <div class="editor-head"><span class="file-icon">‹/›</span><span id="editorName">Нет открытого файла</span><span id="saveStatus" class="status">Готово</span></div>
+      <textarea id="editor" spellcheck="false" placeholder="Выбери файл слева или создай новый…"></textarea>
+    </section>
+    <section class="bottom">
+      <div class="tabs"><button class="tab active" data-tab="chat">✦ AI Agent</button><button class="tab" data-tab="terminal">⌁ Терминал</button></div>
+      <div id="chatPanel" class="panel">
+        <div id="messages" class="messages"><div class="welcome"><div class="spark">✦</div><h2>Что будем создавать?</h2><p>Опиши задачу. Агент предложит изменения, а ты подтвердишь их перед записью файлов.</p><div class="suggestions"><button>Создай простой сайт-визитку</button><button>Объясни структуру проекта</button><button>Найди возможные ошибки</button></div></div></div>
+        <form id="chatForm" class="composer"><textarea id="prompt" rows="2" placeholder="Напиши задачу… (Enter — отправить, Shift+Enter — новая строка)"></textarea><button class="send" type="submit">↑</button></form>
+        <div class="hint">Claude API · изменения применяются только после подтверждения</div>
+      </div>
+      <div id="terminalPanel" class="panel hidden">
+        <div class="terminal-output" id="terminalOutput">Безопасный режим: разрешён ограниченный список команд. Не является полноценной OS-песочницей.</div>
+        <form id="commandForm" class="command-form"><span>$</span><input id="commandInput" placeholder="Например: ls -la"><button class="primary">Выполнить</button></form>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="settingsModal" class="modal hidden"><div class="modal-card settings-card"><h3>Настройки модели и API</h3><p>Ключ хранится в памяти этой вкладки и отправляется серверу для запроса. Приложение не сохраняет его на диск.</p>
+<label>Провайдер API</label><select id="provider"><option value="anthropic">Anthropic — Claude API</option><option value="openai">OpenAI / OpenAI-compatible API</option></select>
+<label>Модель</label><input id="model" value="claude-sonnet-4-20250514" placeholder="Название модели">
+<label>API-ключ</label><input id="apiKey" type="password" autocomplete="off" placeholder="Вставь свой API-ключ">
+<label>Base URL (необязательно)</label><input id="baseUrl" placeholder="Например, https://api.anthropic.com или URL совместимого API">
+<div class="modal-actions"><button id="cancelSettings">Закрыть</button><button id="saveSettings" class="primary">Сохранить настройки</button></div></div></div>
+<div id="modal" class="modal hidden"><div class="modal-card"><h3>Создать файл</h3><p>Путь относительно workspace, например <code>src/index.html</code></p><input id="newPath" placeholder="index.html"><div class="modal-actions"><button id="cancelNew">Отмена</button><button id="createNew" class="primary">Создать</button></div></div></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
