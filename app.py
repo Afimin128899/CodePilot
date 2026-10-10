@@ -155,7 +155,7 @@ def security_checks():
         expected = session.get("csrf_token", "")
         if not expected or not hmac.compare_digest(str(supplied), str(expected)):
             return jsonify(error="CSRF-проверка не пройдена. Обнови страницу и попробуй снова."), 400
-    if request.endpoint in {"login", "static"} or request.endpoint is None:
+    if request.endpoint in {"login", "login_post", "static"} or request.endpoint is None:
         return None
     if not session.get("authenticated"):
         if request.path.startswith("/api/"):
