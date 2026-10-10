@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
 <title>CodePilot — AI Coding Agent</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -17,7 +18,7 @@
   <main class="main">
     <header class="topbar">
       <div><span class="crumb">workspace</span><span class="slash">/</span><span id="currentPath">Выбери файл</span></div>
-      <div class="top-actions"><button id="modelSettings">⚙ Модель / API</button><button id="newFile">＋ Файл</button><button id="saveFile" class="primary">Сохранить</button></div>
+      <div class="top-actions"><button id="modelSettings">⚙ Модель / API</button><button id="newFile">＋ Файл</button><button id="saveFile" class="primary">Сохранить</button><form method="post" action="/logout" class="logout-form"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button type="submit" title="Выйти">Выйти</button></form></div>
     </header>
     <section class="editor-wrap">
       <div class="editor-head"><span class="file-icon">‹/›</span><span id="editorName">Нет открытого файла</span><span id="saveStatus" class="status">Готово</span></div>
@@ -31,7 +32,7 @@
         <div class="hint">Claude API · изменения применяются только после подтверждения</div>
       </div>
       <div id="terminalPanel" class="panel hidden">
-        <div class="terminal-output" id="terminalOutput">Безопасный режим: разрешён ограниченный список команд. Не является полноценной OS-песочницей.</div>
+        <div class="terminal-output" id="terminalOutput">{% if commands_enabled %}Ограниченный режим команд включён. Выполняй только команды, которым доверяешь. Это не заменяет полную OS-песочницу.{% else %}Выполнение команд отключено. Для использования терминала включай ENABLE_COMMANDS=1 только в изолированном Docker-контейнере.{% endif %}</div>
         <form id="commandForm" class="command-form"><span>$</span><input id="commandInput" placeholder="Например: ls -la"><button class="primary">Выполнить</button></form>
       </div>
     </section>
