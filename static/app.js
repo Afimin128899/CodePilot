@@ -2,7 +2,13 @@ const $ = id => document.getElementById(id);
 let activePath = null;
 let history = [];
 let pendingChanges = [];
-let apiSettings = {provider:'anthropic', api_key:'', model:'claude-sonnet-4-20250514', base_url:''};
+let apiSettings = {provider:'openai', api_key:'', model:'', base_url:''};
+// Remember non-secret preferences for this browser tab; never persist the API key.
+try {
+  const saved = JSON.parse(sessionStorage.getItem('codepilot-api-settings') || '{}');
+  apiSettings = {...apiSettings, ...saved, api_key:''};
+} catch (_) {}
+
 
 async function api(url, options={}) {
   const res = await fetch(url, {headers: {'Content-Type':'application/json'}, ...options});
@@ -41,14 +47,20 @@ $('refreshTree').onclick=loadTree;
 $('modelSettings').onclick=()=>$('settingsModal').classList.remove('hidden');
 $('cancelSettings').onclick=()=>$('settingsModal').classList.add('hidden');
 $('provider').onchange=()=>{
-  if($('provider').value==='anthropic' && $('model').value==='gpt-4o') $('model').value='claude-sonnet-4-20250514';
-  if($('provider').value==='openai' && $('model').value==='claude-sonnet-4-20250514') $('model').value='gpt-4o';
-  $('baseUrl').placeholder=$('provider').value==='anthropic'?'Необязательно: https://api.anthropic.com':'Необязательно: https://api.openai.com/v1';
+  if($('provider').value==='anthropic' && !$('model').value) $('model').value='claude-sonnet-4-20250514';
+  if($('provider').value==='openai' && $('model').value==='claude-sonnet-4-20250514') $('model').value='';
+  $('baseUrl').placeholder=$('provider').value==='anthropic'?'Необязательно: https://api.anthropic.com':'Например, https://openrouter.ai/api/v1';
 };
+// Restore provider/model/URL, but intentionally never restore the API key.
+$('provider').value=apiSettings.provider;
+$('model').value=apiSettings.model;
+$('baseUrl').value=apiSettings.base_url;
+$('baseUrl').placeholder='Например, https://openrouter.ai/api/v1';
 $('saveSettings').onclick=()=>{
   apiSettings={provider:$('provider').value,api_key:$('apiKey').value.trim(),model:$('model').value.trim(),base_url:$('baseUrl').value.trim()};
+  try { sessionStorage.setItem('codepilot-api-settings', JSON.stringify({provider:apiSettings.provider,model:apiSettings.model,base_url:apiSettings.base_url})); } catch (_) {}
   $('settingsModal').classList.add('hidden');
-  addMessage('assistant',`Настройки выбраны: ${apiSettings.provider==='anthropic'?'Claude / Anthropic':'OpenAI-совместимый API'}, модель ${apiSettings.model||'не выбрана'}.`);
+  addMessage('assistant',`Настройки выбраны: ${apiSettings.provider==='anthropic'?'Claude / Anthropic':'свой OpenAI-совместимый API'}, модель ${apiSettings.model||'не выбрана'}. API-ключ хранится только в памяти вкладки.`);
 };
 $('saveFile').onclick=async()=>{
   if(!activePath){alert('Сначала открой или создай файл.');return}
