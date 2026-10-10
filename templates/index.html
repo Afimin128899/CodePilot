@@ -39,10 +39,10 @@
   </main>
 </div>
 <div id="settingsModal" class="modal hidden"><div class="modal-card settings-card"><h3>Настройки модели и API</h3><p>Ключ хранится в памяти этой вкладки и отправляется серверу для запроса. Приложение не сохраняет его на диск.</p>
-<label>Провайдер API</label><select id="provider"><option value="anthropic">Anthropic — Claude API</option><option value="openai">OpenAI / OpenAI-compatible API</option></select>
+<label>Провайдер API</label><select id="provider"><option value="openai">Свой API — OpenAI-compatible (OpenRouter, vLLM и др.)</option><option value="anthropic">Anthropic — Claude API</option></select>
 <label>Модель</label><input id="model" value="claude-sonnet-4-20250514" placeholder="Название модели">
 <label>API-ключ</label><input id="apiKey" type="password" autocomplete="off" placeholder="Вставь свой API-ключ">
-<label>Base URL (необязательно)</label><input id="baseUrl" placeholder="Например, https://api.anthropic.com или URL совместимого API">
+<label>API URL / Base URL</label><input id="baseUrl" placeholder="Например, https://openrouter.ai/api/v1"><small class="settings-help">Для своего API укажи базовый URL совместимого с OpenAI API, обычно с окончанием /v1. Ключ не сохраняется после обновления страницы.</small>
 <div class="modal-actions"><button id="cancelSettings">Закрыть</button><button id="saveSettings" class="primary">Сохранить настройки</button></div></div></div>
 <div id="modal" class="modal hidden"><div class="modal-card"><h3>Создать файл</h3><p>Путь относительно workspace, например <code>src/index.html</code></p><input id="newPath" placeholder="index.html"><div class="modal-actions"><button id="cancelNew">Отмена</button><button id="createNew" class="primary">Создать</button></div></div></div>
 <script src="/static/app.js"></script>
