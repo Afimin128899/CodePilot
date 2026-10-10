@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<title>Вход — CodePilot</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-page">
+<main class="login-card">
+  <div class="login-brand"><span class="logo">⌘</span><div><b>CodePilot</b><small>AI coding workspace</small></div></div>
+  <h1>Вход в CodePilot</h1>
+  <p>Введи пароль, заданный на своём сервере.</p>
+  {% if not password_configured %}
+  <div class="login-error">Пароль не настроен. Открой .env и задай APP_PASSWORD и APP_SECRET_KEY, затем перезапусти приложение.</div>
+  {% endif %}
+  {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
+  <form method="post" action="/login">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label for="password">Пароль</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+    <button class="primary" type="submit">Войти</button>
+  </form>
+  <small class="login-foot">Не публикуй CodePilot без HTTPS и дополнительной защиты доступа.</small>
+</main>
+</body>
+</html>
