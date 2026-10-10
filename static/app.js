@@ -11,7 +11,10 @@ try {
 
 
 async function api(url, options={}) {
-  const res = await fetch(url, {headers: {'Content-Type':'application/json'}, ...options});
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+  const headers = {'Content-Type':'application/json', ...(options.headers || {})};
+  if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+  const res = await fetch(url, {...options, headers});
   const data = await res.json().catch(()=>({error:'Некорректный ответ сервера'}));
   if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
   return data;
